@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
+        <h2>Inventario y Catálogo de Café</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">+ Nuevo Producto</button>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre del Café</th>
+                                <th>Presentación</th>
+                                <th>Precio ($)</th>
+                                <th>Stock (Lotes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in productos %}
+                            <tr>
+                                <td>{{ p.id }}</td>
+                                <td class="fw-semibold">{{ p.nombre }}</td>
+                                <td>{{ p.presentacion }}</td>
+                                <td>${{ "%.2f"|format(p.precio) }}</td>
+                                <td><span class="badge bg-success">{{ p.stock }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No hay productos registrados en el sistema.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Registrar Producto -->
+<div class="modal fade" id="modalProducto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ url_for('nuevo_producto') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Nuevo Lote de Café</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Café</label>
+                        <input type="text" name="nombre" class="form-control" required placeholder="Ej. Café Especial Arábigo">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Presentación</label>
+                        <input type="text" name="presentacion" class="form-control" required placeholder="Ej. Molido 500g">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio Unitario ($)</label>
+                        <input type="number" step="0.01" min="0" name="precio" class="form-control" required placeholder="0.00">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock Inicial</label>
+                        <input type="number" min="0" name="stock" class="form-control" required placeholder="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
